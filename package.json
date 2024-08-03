@@ -2,7 +2,7 @@
   "name": "backend-letalk-challenge",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon dist/app.js",
+    "start": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/app.ts",
     "prepare": "husky install"
   },
   "license": "ISC",
@@ -13,17 +13,18 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
+    "@rocketseat/eslint-config": "^1.2.0",
     "@types/body-parser": "^1.19.5",
     "@types/express": "^4.17.14",
     "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.44.0",
     "husky": "^8.0.3",
     "nodemon": "^2.0.20",
-    "eslint": "^8.44.0",
-    "@rocketseat/eslint-config": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0"
+    "ts-node-dev": "^2.0.0"
   },
   "config": {
     "commitizen": {
