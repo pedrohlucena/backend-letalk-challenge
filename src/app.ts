@@ -3,7 +3,7 @@ import { json } from 'body-parser'
 import { loansRoutes } from './routes'
 import { HTTP_STATUS_CODE } from './constants'
 import cors from 'cors'
-import { setupDB } from './config'
+import { env, setupDB } from './config'
 ;(async () => {
   const app = express()
 
@@ -23,7 +23,7 @@ import { setupDB } from './config'
       .json({ message: err.message })
   })
 
-  const port = 3000
+  const port = env.PORT
 
-  app.listen(3000, () => console.log(`Server up and running on port ${port}`))
+  app.listen(port, () => console.log(`Server up and running on port ${port}`))
 })()
