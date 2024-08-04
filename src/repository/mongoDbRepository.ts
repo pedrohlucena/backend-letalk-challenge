@@ -7,6 +7,11 @@ export class MongoDbRepo<T> {
     this.model = model
   }
 
+  async get(params?: Partial<T>) {
+    const cursor = await this.model.find<T>(params || {})
+    return cursor
+  }
+
   async create(params: T) {
     const cursor = await this.model.create<T>(params)
     return cursor
