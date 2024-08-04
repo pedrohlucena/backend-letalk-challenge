@@ -2,8 +2,11 @@ import express, { Request, Response, NextFunction } from 'express'
 import { json } from 'body-parser'
 import { loansRoutes } from './routes'
 import { HTTP_STATUS_CODE } from './constants'
+import cors from 'cors'
 
 const app = express()
+
+app.use(cors())
 
 app.use(json())
 
