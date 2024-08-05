@@ -3,27 +3,23 @@ import { json } from 'body-parser'
 import { loansRoutes } from './routes'
 import { HTTP_STATUS_CODE } from './constants'
 import cors from 'cors'
-import { env, setupDB } from './config'
-;(async () => {
-  const app = express()
+import { setupDB } from './config'
+const app = express()
 
-  await setupDB()
+setupDB()
 
-  console.log('DB OK!')
+console.log('DB OK!')
 
-  app.use(cors())
+app.use(cors())
 
-  app.use(json())
+app.use(json())
 
-  app.use('/loans', loansRoutes)
+app.use('/loans', loansRoutes)
 
-  app.use((err: Error, _: Request, res: Response, _2: NextFunction) => {
-    res
-      .status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR)
-      .json({ message: err.message })
-  })
+app.use((err: Error, _: Request, res: Response, _2: NextFunction) => {
+  res
+    .status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR)
+    .json({ message: err.message })
+})
 
-  const port = env.PORT
-
-  app.listen(port, () => console.log(`Server up and running on port ${port}`))
-})()
+export { app }

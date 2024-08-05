@@ -6,7 +6,6 @@ dotenv.config()
 const envSchema = z.object({
   MONGODB_CONNECTION_STR: z.string(),
   DB_NAME: z.string(),
-  PORT: z.coerce.number(),
   NODE_ENV: z.string(),
 })
 

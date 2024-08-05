@@ -7,6 +7,9 @@ export const setupDB = async () => {
   if (connectionState.valueOf() !== 1) {
     await mongoose.connect(env.MONGODB_CONNECTION_STR, {
       dbName: env.DB_NAME,
+      retryWrites: true,
+      w: 'majority',
+      appName: 'letalk-challenge',
     })
   }
 }
