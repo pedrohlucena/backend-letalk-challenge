@@ -1,19 +1,17 @@
-import { CODE_MESSAGES } from '../constants'
-import { CodeMessage } from '../models'
+import { CODE_MESSAGES, HTTP_STATUS_CODE } from '../constants'
 import { BusinessError } from '../exceptions'
 
-export function schemaValidator(body: unknown, schema: Zod.Schema) {
+export function schemaValidator<I, O>(body: I, schema: Zod.Schema<O>) {
   const result = schema.safeParse(body)
 
   if (!result.success) {
     const errorMessage = result.error.issues[0].message
 
-    const codeMessage: CodeMessage = {
-      code: CODE_MESSAGES.INVALID_INPUTS.code,
-      message: errorMessage,
-    }
-
-    throw new BusinessError(codeMessage)
+    throw new BusinessError(
+      CODE_MESSAGES.INVALID_INPUTS.code,
+      errorMessage,
+      HTTP_STATUS_CODE.BAD_REQUEST,
+    )
   }
 
   return result.data

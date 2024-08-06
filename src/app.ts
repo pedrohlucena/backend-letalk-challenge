@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { json } from 'body-parser'
 import { loansRoutes } from './routes'
-import { HTTP_STATUS_CODE } from './constants'
 import cors from 'cors'
 import { setupDB } from './config'
+import { BusinessError } from './exceptions'
 const app = express()
 
 setupDB()
@@ -16,10 +16,10 @@ app.use(json())
 
 app.use('/loans', loansRoutes)
 
-app.use((err: Error, _: Request, res: Response, _2: NextFunction) => {
-  res
-    .status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR)
-    .json({ message: err.message })
+app.use((err: BusinessError, _: Request, res: Response, _2: NextFunction) => {
+  const { code, message, statusCode } = err
+  const response = { code, message }
+  res.status(statusCode).json(response)
 })
 
 export { app }

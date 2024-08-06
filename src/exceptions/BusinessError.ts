@@ -1,17 +1,16 @@
 import { HTTP_STATUS_CODE } from '../constants'
-import { CodeMessage } from '../models'
 
 export class BusinessError extends Error {
-  statusCode: number
   name: string
-  message: string
   code: string
+  message: string
+  statusCode: HTTP_STATUS_CODE
 
-  constructor({ message, code }: CodeMessage) {
+  constructor(code: string, message: string, statusCode?: HTTP_STATUS_CODE) {
     super(`BusinessError: ${message}`)
     this.name = `BusinessError: ${message}`
     this.code = code
     this.message = message
-    this.statusCode = HTTP_STATUS_CODE.BAD_REQUEST
+    this.statusCode = statusCode || HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR
   }
 }

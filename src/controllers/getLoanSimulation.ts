@@ -1,43 +1,40 @@
 import { RequestHandler } from 'express'
 import { GetLoanSimulation } from '../business'
-import { GetLoanSimulationParameters, ParamsDictionary, UF } from '../models'
-import { CODE_MESSAGES, HTTP_STATUS_CODE, VALID_UFS } from '../constants'
+import {
+  GetLoanSimulationParameters,
+  GetLoanSimulationQuery,
+  ParamsDictionary,
+} from '../models'
+import { HTTP_STATUS_CODE } from '../constants'
+import { errorResponse, schemaValidator } from '../utils'
+import { getLoanSimulationSchema } from '../schemas'
 
 export const getLoanSimulation: RequestHandler<
   ParamsDictionary,
   any,
   any,
   GetLoanSimulationParameters
-> = (request, res, _2) => {
+> = (request, res, next) => {
   try {
+    const schema = getLoanSimulationSchema(request.query.loan_value)
+
+    const query = schemaValidator<
+      GetLoanSimulationParameters,
+      GetLoanSimulationQuery
+    >(request.query, schema)
+
     const {
       uf,
       loan_value: loanValue,
       installment_value: installmentValue,
-    } = request.query
-
-    if (!uf || !loanValue || !installmentValue) {
-      return res
-        .status(HTTP_STATUS_CODE.BAD_REQUEST)
-        .json(CODE_MESSAGES.MISSING_PARAMETERS)
-    }
-
-    if (!VALID_UFS.includes(uf)) {
-      return res
-        .status(HTTP_STATUS_CODE.BAD_REQUEST)
-        .json(CODE_MESSAGES.INVALID_UF)
-    }
+    } = query
 
     const business = new GetLoanSimulation()
 
-    const response = business.getLoanSimulation(
-      uf as UF,
-      +loanValue,
-      +installmentValue,
-    )
+    const response = business.getLoanSimulation(uf, loanValue, installmentValue)
 
     return res.status(HTTP_STATUS_CODE.OK).json(response)
   } catch (error) {
-    console.log(error)
+    next(errorResponse(error))
   }
 }
