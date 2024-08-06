@@ -13,3 +13,5 @@ export type { PostLoanBody } from './PostLoan'
 export { Loan } from './Loan'
 
 export type { ILoan } from './ILoan'
+
+export type { CodeMessage } from './CodeMessage'

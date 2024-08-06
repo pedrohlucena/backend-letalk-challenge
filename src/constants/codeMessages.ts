@@ -15,4 +15,8 @@ export const CODE_MESSAGES = {
     code: '003',
     message: `The uf query parameter must be one of: ${validUfs}.`,
   },
+  INVALID_INPUTS: {
+    code: '004',
+    message: 'Invalid inputs',
+  },
 }
