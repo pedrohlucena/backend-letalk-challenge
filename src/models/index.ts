@@ -4,7 +4,7 @@ export type * from './GetLoanSimulation'
 
 export type { ParamsDictionary } from './ParamsDictionary'
 
-export type { GetInstallmentsProjectionParameters } from './GetInstallmentsProjection'
+export type * from './GetInstallmentsProjection'
 
 export type { Installment } from './Installment'
 

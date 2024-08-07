@@ -1,0 +1,27 @@
+import { z } from 'zod'
+import { VALID_UFS } from '../constants'
+
+const minLoanValue = 50000
+
+const ERROR_MESSAGES = (minInstallmentValue?: number) => ({
+  MIN_LOAN_VALUE: `loan_value must be greater than or equal to ${minLoanValue}`,
+  MIN_INSTALLMENT_VALUE: `installment_value must be greater than or equal to ${minInstallmentValue}`,
+})
+
+export const getInstallmentsProjectionSchema = (loanValue?: string) => {
+  const minInstallmentValue = loanValue ? +loanValue * (1 / 100) : 1
+
+  const errorMessages = ERROR_MESSAGES(minInstallmentValue)
+
+  return z.object({
+    uf: z.enum(VALID_UFS),
+    loan_value: z.coerce
+      .number()
+      .positive()
+      .min(minLoanValue, errorMessages.MIN_LOAN_VALUE),
+    installment_value: z.coerce
+      .number()
+      .positive()
+      .min(minInstallmentValue, errorMessages.MIN_INSTALLMENT_VALUE),
+  })
+}

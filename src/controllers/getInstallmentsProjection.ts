@@ -2,46 +2,43 @@ import { RequestHandler } from 'express'
 import { GetInstallmentsProjection } from '../business'
 import {
   GetInstallmentsProjectionParameters,
+  GetInstallmentsProjectionQuery,
   ParamsDictionary,
-  UF,
 } from '../models'
-import { CODE_MESSAGES, HTTP_STATUS_CODE, VALID_UFS } from '../constants'
+import { HTTP_STATUS_CODE } from '../constants'
+import { errorResponse, schemaValidator } from '../utils'
+import { getInstallmentsProjectionSchema } from '../schemas'
 
 export const getInstallmentsProjection: RequestHandler<
   ParamsDictionary,
   any,
   any,
   GetInstallmentsProjectionParameters
-> = (request, res, _2) => {
+> = (request, res, next) => {
   try {
+    const schema = getInstallmentsProjectionSchema(request.query.loan_value)
+
+    const query = schemaValidator<
+      GetInstallmentsProjectionParameters,
+      GetInstallmentsProjectionQuery
+    >(request.query, schema)
+
     const {
       uf,
       loan_value: loanValue,
       installment_value: installmentValue,
-    } = request.query
-
-    if (!uf || !loanValue || !installmentValue) {
-      return res
-        .status(HTTP_STATUS_CODE.BAD_REQUEST)
-        .json(CODE_MESSAGES.MISSING_PARAMETERS)
-    }
-
-    if (!VALID_UFS.includes(uf)) {
-      return res
-        .status(HTTP_STATUS_CODE.BAD_REQUEST)
-        .json(CODE_MESSAGES.INVALID_UF)
-    }
+    } = query
 
     const business = new GetInstallmentsProjection()
 
     const response = business.getInstallmentsProjection(
-      uf as UF,
-      +loanValue,
-      +installmentValue,
+      uf,
+      loanValue,
+      installmentValue,
     )
 
     return res.status(HTTP_STATUS_CODE.OK).json(response)
   } catch (error) {
-    console.log(error)
+    next(errorResponse(error))
   }
 }
