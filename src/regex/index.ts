@@ -1,0 +1,1 @@
+export { cpfRegex } from './cpf'

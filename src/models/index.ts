@@ -8,7 +8,7 @@ export type { GetInstallmentsProjectionParameters } from './GetInstallmentsProje
 
 export type { Installment } from './Installment'
 
-export type { PostLoanBody } from './PostLoan'
+export type * from './PostLoan'
 
 export { Loan } from './Loan'
 

@@ -1,15 +1,22 @@
 import { RequestHandler } from 'express'
 import { PostLoan } from '../business'
 import { HTTP_STATUS_CODE } from '../constants'
-import { ParamsDictionary, PostLoanBody } from '../models'
+import { OutputedPostLoanBody, ParamsDictionary, PostLoanBody } from '../models'
+import { errorResponse, schemaValidator } from '../utils'
+import { postLoanSchema } from '../schemas/postLoanSchema'
 
 export const postLoan: RequestHandler<
   ParamsDictionary,
   any,
   PostLoanBody
-> = async (request, res, _2) => {
+> = async (request, res, next) => {
   try {
-    const loan = request.body
+    const schema = postLoanSchema(request.body.loan_value)
+
+    const loan = schemaValidator<PostLoanBody, OutputedPostLoanBody>(
+      request.body,
+      schema,
+    )
 
     const business = new PostLoan()
 
@@ -17,6 +24,6 @@ export const postLoan: RequestHandler<
 
     return res.sendStatus(HTTP_STATUS_CODE.CREATED)
   } catch (error) {
-    console.log(error)
+    next(errorResponse(error))
   }
 }
